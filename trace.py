@@ -1,14 +1,12 @@
 from sympy import * 
 import numpy as np
-import sys
 
 ################################################################################
-# DEBUGGER
+# FILE LOGGING
 ################################################################################
-
-def dprint(*args_tuple):
-    ''' detailed print for debugging'''
-    print("[D]",*args_tuple)
+''' print into the logfile'''
+def fprint( *args):
+    print(*args, file=fileinfo)
     return
 
 ################################################################################
@@ -17,7 +15,7 @@ def dprint(*args_tuple):
 
 def eps_maker(dim):
     ''' Using generator, it makes all possible epsilons '''
-    dprint("start eps_generator, dim: ",dim)
+    fprint("start eps_generator, dim: ",dim)
     print( "-----------------------------------------------------------------------")
     ones = np.ones(dim, dtype=int)
     count = 0
@@ -33,7 +31,7 @@ def eps_maker(dim):
                 output[j+1] = output[j+1] + 1
         count = count + 1
         yield output - ones 
-    dprint("finish eps_generator")
+    fprint("finish eps_generator")
     if count != (3**dim):
         print("ERROR!!!")
     return
@@ -81,7 +79,7 @@ def degree(eps_input):
 
     for i in range(size):
         # start of subinterval
-        dprint("eps[i] : ", eps[i],", ", flag, sgn_flag)
+        fprint("eps[i] : ", eps[i],", ", flag, sgn_flag)
         if eps[i] == 0 and flag == False:
             sgn = 1
             subcount = 1
@@ -91,7 +89,7 @@ def degree(eps_input):
         # end of subinterval, or inside [3,3,...,3]
         elif eps[i] == 3 :
             count = count + abs(subcount)
-            dprint("count : ", count)
+            fprint("count : ", count)
             subcount = 0
             flag = False
         # zero, inside a subinterval
@@ -99,7 +97,7 @@ def degree(eps_input):
         elif eps[i] == 0 and flag == True:
             if sgn_flag == True:
                 sgn = -sgn
-                dprint("change sgn")
+                fprint("change sgn")
                 sgn_flag = False
             subcount = subcount + sgn
         # nonzero, inside a subinterval
@@ -109,7 +107,7 @@ def degree(eps_input):
         # last entry
         if i == size - 1:
                 count = count + abs(subcount)
-                dprint("count : ", count)
+                fprint("count : ", count)
 
     return (int)(1/2 * count)
 
@@ -123,12 +121,12 @@ def roll_until(eps, num):
     size_eps = np.size(eps) 
 
     if np.all(eps != num) == True:
-        dprint("no entry is ", num," stop rolling. ")
+        fprint("no entry is ", num," stop rolling. ")
         return eps
 
     while (eps[0] != num):
         eps = np.roll(eps,-1) 
-    dprint('rolling: ',eps)
+    fprint('rolling: ',eps)
     return eps
 
 def cut_out(eps_input):
@@ -152,7 +150,7 @@ def cut_out(eps_input):
                     if count == even_leng:
                         for j in range(count):
                             eps[i-j-1] = 3
-                            dprint("1 middle cut out : ", eps, "even leng: ", even_leng, "i: ", i)
+                            fprint("1 middle cut out : ", eps, "even leng: ", even_leng, "i: ", i)
                             count = 0
                     else:
                         count = 0
@@ -160,10 +158,10 @@ def cut_out(eps_input):
                     if count == even_leng:
                         for j in range(count):
                             eps[i-j] = 3
-                            dprint("2 middle cut out : ", eps, "even leng: ", even_leng, "i: ", i)
+                            fprint("2 middle cut out : ", eps, "even leng: ", even_leng, "i: ", i)
                             count = 0
         even_leng = even_leng - 2
-    dprint("cut out : ", eps)
+    fprint("cut out : ", eps)
     return eps
 ################################################################################
 # deprecated
@@ -177,7 +175,7 @@ def degree_of_subinterval(sub_eps):
     count = 0
     flag = False
     if (sub_eps[0] != 0) or (sub_eps[size - 1] != 0):
-        dprint("epsilon format error!!!!: ", sub_eps)
+        fprint("epsilon format error!!!!: ", sub_eps)
         return 0
     if np.size(sub_eps) == 1:
         return 0
@@ -187,13 +185,13 @@ def degree_of_subinterval(sub_eps):
         if sub_eps[i] == 0:
             count = count + sign
             flag = false
-            dprint("i: ",i,"count: ",count)
+            fprint("i: ",i,"count: ",count)
         elif (sub_eps[i] != 0 and flag == False):
             sign = -sign
             flag = true
-            dprint("i: ", i, "change sign")
+            fprint("i: ", i, "change sign")
 
-    dprint(" degree : ", abs(int(count/2)))
+    fprint(" degree : ", abs(int(count/2)))
     return abs(int(count/2))
 
 ################################################################################
@@ -224,17 +222,17 @@ def tau(num, symbol):
 def large_b(m,symbol1,symbol2):
     if np.any(m == 0):
         return 0
-    dprint("large_b, input :", m)
+    fprint("large_b, input :", m)
     expr = 1
     multiplicand = 1
     for i in range(np.size(m)):
         if i%2 == 0:
             multiplicand = beta(m[i], symbol1)
-            dprint("i:",i,", beta :", multiplicand)
+            fprint("i:",i,", beta :", multiplicand)
             expr = expr * multiplicand
         else:
             multiplicand = beta(m[i], symbol2)
-            dprint("i:",i,", beta :", multiplicand)
+            fprint("i:",i,", beta :", multiplicand)
             expr = expr * multiplicand
     return expand(expr)
 
@@ -264,11 +262,10 @@ def main():
 
     filename = filename + ".txt"
 
-    stdout = sys.stdout
-    f = open(filename,'w', -1, "utf-8")
-    sys.stdout = f
-    
-    print("m : ", line)
+    global fileinfo
+    fileinfo = open(filename,'w', -1, "utf-8")
+
+    fprint("m : ", line)
 
      # initiation
     init_printing(order='rev-lex')
@@ -296,40 +293,38 @@ def main():
     for mu in gen:
         if is_alternating(mu) == True:
             alt_count = alt_count+1
-            print(alt_count,". mu:",  mu)
+            fprint(alt_count,". mu:",  mu)
             deg = degree(mu)
-            print(" degree of mu : ", deg,"\n")
+            fprint(" degree of mu : ", deg,"\n")
             largeb = large_b(m + mu, x, y)
             if largeb == 0:
                 summand = 0
-                print( "-----------------------------------------------------------------------")
+                fprint( "-----------------------------------------------------------------------")
                 continue
             else:
                 summand = expand(((-1)**(r - deg)) * tau(deg,z) * largeb)
-            dprint( " large_b : ", largeb )
-            dprint( " sgn : ", ((-1)**(r - deg)) )
-            dprint( " tau(deg) : ", tau(deg,z) )
-            dprint( " summand : ", summand)
+            fprint(" large_b : ", largeb )
+            fprint(" sgn : ", ((-1)**(r - deg)) )
+            fprint(" tau(deg) : ", tau(deg,z) )
+            fprint(" summand : ", summand)
             expr2 = expr2 + summand       
-            print( "-----------------------------------------------------------------------")
+            fprint( "-----------------------------------------------------------------------")
     
     if alt_count != (2**dim)-1:
         print("ERROR!!!")
-    print(" expr1 : ", expr1)
-    print(" expr2 : ", expr2)
-    print( "-----------------------------------------------------------------------")
+    fprint(" expr1 : ", expr1)
+    fprint(" expr2 : ", expr2)
+    fprint( "-----------------------------------------------------------------------")
     expr = expand(expr1 + (1/2)*expr2)
-    print(" RESULT is : ") 
-    print(expr)
-    print( "-----------------------------------------------------------------------")
-    print( " Calculation Example ")
-    print( " A : ", A)
-    print( " B : ", B)
-    print(" trace(C) : ", trace(C))
-    print(" expr.sub : ", expr.subs({x:trace(A),y:trace(B),z:trace(A*B)}))
+    fprint(" RESULT is : ")
+    fprint(expr)
+    fprint( "-----------------------------------------------------------------------")
+    fprint( " Calculation Example ")
+    fprint( " A : ", A)
+    fprint( " B : ", B)
+    fprint(" trace(C) : ", trace(C))
+    fprint(" expr.sub : ", expr.subs({x:trace(A),y:trace(B),z:trace(A*B)}))
     
-    f.close()
-    sys.stdout = stdout
     print("")
     print(" RESULT is : \n ") 
     pretty_print(expr, order='rev-lex')
