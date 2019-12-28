@@ -1,2 +1,2 @@
 # trace_polynomials
-Share a python script used for compute trace polynomials 
+Share some python scripts used for compute trace polynomials 
