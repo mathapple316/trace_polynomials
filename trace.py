@@ -245,7 +245,7 @@ def large_b(m,symbol1,symbol2):
 def main():
     # input vector m and set dim
     print("\n type the value of m ")
-    line = input(" ").split(' ')
+    line = input(" ").strip().split(' ')
     print("\n m : ", line)
 
     if len(line)%2 != 0:
