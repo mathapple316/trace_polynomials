@@ -1,13 +1,20 @@
-from sympy import * 
+from sympy import *
 import numpy as np
+import itertools
+from time import time
+from sympy import degree as deg_of
+import sys
 
 ################################################################################
 # FILE LOGGING
 ################################################################################
 ''' print into the logfile'''
-def fprint( *args):
+
+
+def fprint(*args):
     print(*args, file=fileinfo)
     return
+
 
 ################################################################################
 # EPSILON RELATED
@@ -15,24 +22,24 @@ def fprint( *args):
 
 def eps_maker(dim):
     ''' Using generator, it makes all possible epsilons '''
-    fprint("start eps_generator, dim: ",dim)
-    print( "-----------------------------------------------------------------------")
+    fprint("start eps_generator, dim: ", dim)
+    print("-----------------------------------------------------------------------")
     ones = np.ones(dim, dtype=int)
     count = 0
     output = np.zeros(dim, dtype=int)
-    count = count+1 
+    count = count + 1
     yield output - ones
 
-    while(count < (3**dim)):
-        output[0] = output[0]+1
-        for j in range(dim - 1): 
+    while count < (3 ** dim):
+        output[0] = output[0] + 1
+        for j in range(dim - 1):
             if output[j] == 3:
                 output[j] = 0
-                output[j+1] = output[j+1] + 1
+                output[j + 1] = output[j + 1] + 1
         count = count + 1
-        yield output - ones 
+        yield output - ones
     fprint("finish eps_generator")
-    if count != (3**dim):
+    if count != (3 ** dim):
         print("ERROR!!!")
     return
 
