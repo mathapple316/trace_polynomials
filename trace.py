@@ -128,19 +128,17 @@ def degree(eps_input):
 
 
 def tr_manual(m):
-	print("tr_manual, input: ", m)
-
+	
 	if m == None:
 		print("invalid input value, ERROR!!!!!")
 		return None
 	
-	if np.size(m) % 2 != 0:
-		dim = np.size(m) + 1
-	else:
-		dim = np.size(m)
-
-	r = np.size(m) / 2
-	ones = np.ones(dim)
+	r = (int)((np.size(m)+1)/2)
+	dim = 2*r
+	
+	print("tr_manual, input: ", m, "dim: ", dim, "r: ", r)
+	
+	ones = np.ones(dim, dtype=int)
 
 	if dim == 2:
 		if m[0] == 0 and m[1] == 0:
@@ -156,14 +154,15 @@ def tr_manual(m):
 			print("tr_for_basis, ", m, "return z")
 			return z
 
-		result = 0
-		for idx in idx_generator(dim, 2):
-			print("-----------------")
-			print("idx:", idx)
-			summand = ((-1)**sum(idx)) * (vector_fullpoly(m-ones+idx, tr_for_idx(dim, idx)))
-			result += summand
-			print("summand : ", summand, ", result : ", result)
-		return result
+	result = 0
+	print("start idx_gen, for compute trace of", m)
+	for idx in idx_generator(dim, 2):
+		print("-----------------")
+		summand = ((-1)**sum(idx)) * (vector_fullpoly(m-ones+idx, tr_for_idx(dim, idx)))
+		result += summand
+		print("summand : ", summand, "idx", idx)
+	print("result of tr(",m,"), :", expand(result))
+	return expand(result)
 
 
 def tr_for_idx(dim, index):
@@ -189,7 +188,7 @@ def tr_for_idx(dim, index):
 			return z
 
 	if np.all(np.array(index) == 1):
-		return beta(dim / 2, z)
+		return tau(dim/2, z)
 	else:
 		for i in range(0, dim):
 			if index[i] == 0:
