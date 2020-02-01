@@ -1,6 +1,6 @@
 import sys
 from time import time
-
+import copy
 import numpy as np
 from sympy import *
 from sympy import degree as deg_of
@@ -606,8 +606,119 @@ def check(m, expr):
 	pretty_print(expr, order='rev-lex')
 	print("\n Read " + filename + " for detailed calculation. ")
 
-
+#################################################################################
+# WORD GENERATOR
 ################################################################################
+def word_gen(length):
+	"""
+	Input : length of words in the free group of rank 2
+	Output : List consists of all reduced words of given length
+	Comment : Each element of this list is an even-diemsional vector size less than or equal to 2*[(length+1)/2]+2
+	"""
+	result = set()
+	if length == 0:
+		return [[0,0]]
+
+	elif length == 1:
+		result = [[1,0],[-1,0],[0,1],[0,-1]]
+		return result
+
+	# length larger than or equal to 2
+	else:
+		a_words = []
+		b_words = []
+		# make a_words
+		for i in range(-length, length+1):
+			# the case where the word start with b
+			if i == 0:
+				continue
+			print ("i:",i,"a_words:",a_words)
+			front_piece = [i, 0]
+			if abs(i) == length:
+				a_words.append(front_piece)
+				continue
+
+			else:
+				deficient_size = length - abs(i) # the size must be added after front_piece
+				if deficient_size <= 0:
+					print("invalid size of deficient_size", abs(i), length)
+					return
+				backpiece_candidates = word_gen(deficient_size)
+				print("back piece candidates", backpiece_candidates, "front: ", front_piece)
+				for candidate in backpiece_candidates:
+					if candidate[0] == 0: # check if the candidate starts with 'b'
+						word = copy.deepcopy(front_piece)
+						word.extend(candidate)
+						print("append word: ", word)
+						a_words.append(word)
+		if (len(a_words) == 2 * 3**(length-1)):
+			print("a_words : ", a_words)
+
+		# make b_words
+		for i in range(-length, length+1):
+			# (0,0, ... ) case
+			if i == 0:
+				continue
+			print ("i:",i,"b_words:",b_words)
+			front_piece = [0,i]
+			if abs(i) == length:
+				b_words.append(front_piece)
+				continue
+
+			else:
+				deficient_size = length - abs(i) # the size must be added after front_piece
+				if deficient_size <= 0:
+					print("invalid size of deficient_size", abs(i), length)
+					return
+				backpiece_candidates = word_gen(deficient_size)
+				print("back piece candidates", backpiece_candidates, "front: ", front_piece)
+				for candidate in backpiece_candidates:
+					print("caddidate: ", candidate)
+					if candidate[0] != 0: # check if the candidate starts with 'a'
+						word = copy.deepcopy(front_piece)
+						word.extend(candidate)
+						print("append word: ", word)
+						b_words.append(word)
+
+		if (len(b_words) == 2 * 3**(length - 1)):
+			print("b_words : ", b_words)
+
+	result = a_words
+	result.extend(b_words)
+	print("len: ", len(result), " result :", result)
+
+	return result
+
+def word_class(words):
+	"""
+	Input : List of words of same length
+	Output : List of lists, and each list consists of given words whose traces are same
+	Comment :
+	tr_class[0] = [the number of classes]
+	tr_class[i] = [value, [word1, word2, word3, ...]]
+	"""
+	count = len(words)
+	max_idx = 1
+	print("number of words :", count)
+	tr_class = [0]
+	for word in words:
+		tracepoly = tr(word)
+
+		for idx in range(1, max_idx + 1):
+
+			if idx == max_idx:
+				tr_class.append([tracepoly,[word]])
+				max_idx = max_idx + 1
+				tr_class[0] = tr_class[0] + 1
+				break
+
+			if tr_class[idx][0] != tracepoly:
+				idx = idx + 1
+			else:
+				tr_class[idx][1].append(word)
+				break
+	return tr_class
+
 def time_tr(m):
 	t0 = time()
 	expr = tr(m)
@@ -627,5 +738,9 @@ if __name__ == "__main__":
 	expr = tr(m)
 	print("calculation time : ", time() - t0)
 	print("result : ", expr)
+	fileinfo = open("wordclass_4.txt", 'w', -1, "utf-8")
+	result = word_class(word_gen(4))
+	for row in result:
+		fprint(row)
 # check(m,expr)
 
