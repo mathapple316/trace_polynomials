@@ -1,9 +1,9 @@
-from sympy import *
-import numpy as np
-import itertools
-from time import time
-from sympy import degree as deg_of
 import sys
+from time import time
+
+import numpy as np
+from sympy import *
+from sympy import degree as deg_of
 
 ################################################################################
 # FILE LOGGING
@@ -128,16 +128,12 @@ def degree(eps_input):
 
 
 def tr_manual(m):
-	
-	if m == None:
-		print("invalid input value, ERROR!!!!!")
-		return None
-	
+
 	r = (int)((np.size(m)+1)/2)
 	dim = 2*r
-	
+
 	print("tr_manual, input: ", m, "dim: ", dim, "r: ", r)
-	
+
 	ones = np.ones(dim, dtype=int)
 
 	if dim == 2:
@@ -167,12 +163,12 @@ def tr_manual(m):
 
 def tr_for_idx(dim, index):
 	print("tr_for_idx :", index)
-	
+
 	if dim % 2 != 0:
 		fprint("ERROR! odd dimension")
 		return
 
-	
+
 	if dim == 2:
 		if index[0] == 0 and index[1] == 0:
 			print("tr_for_basis, ", index, "return 2")
@@ -628,7 +624,8 @@ if __name__ == "__main__":
 	sys.setrecursionlimit(10000)
 	m = inputAndInit()
 	t0 = time()
-	expr = tr_manual(m)
+	expr = tr(m)
 	print("calculation time : ", time() - t0)
+	print("result : ", expr)
 # check(m,expr)
 
