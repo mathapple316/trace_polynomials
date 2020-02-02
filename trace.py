@@ -607,11 +607,33 @@ def check(m, expr):
 	print("\n Read " + filename + " for detailed calculation. ")
 
 #################################################################################
-# WORD GENERATOR
+# WORD RELATED
 ################################################################################
-def word_gen(length):
+
+def is_cyclically_reduced(word):
+	leng = len(word)
+	if len == 2:
+		return True
+
+	for i in range(0,leng-2):
+		if word[i+1] == 0 and word[i]*word[i+2] < 0:
+			return False
+
+	# i == len-2 case
+	if word[leng-1] == 0 and word[0]*word[leng-2] < 0:
+		return False
+
+	# i == len-1 case
+	elif word[0] == 0 and word[1]*word[leng-1] < 0:
+		return False
+
+	else:
+		return True
+
+def word_gen(length, is_reduced):
 	"""
-	Input : length of words in the free group of rank 2
+	Input1 : length of words in the free group of rank 2
+	Input2 : The flag determining the words must be cyclically reduced
 	Output : List consists of all reduced words of given length
 	Comment : Each element of this list is an even-diemsional vector size less than or equal to 2*[(length+1)/2]+2
 	"""
@@ -643,12 +665,17 @@ def word_gen(length):
 				if deficient_size <= 0:
 					print("invalid size of deficient_size", abs(i), length)
 					return
-				backpiece_candidates = word_gen(deficient_size)
+				backpiece_candidates = word_gen(deficient_size, False)
 				print("back piece candidates", backpiece_candidates, "front: ", front_piece)
 				for candidate in backpiece_candidates:
 					if candidate[0] == 0: # check if the candidate starts with 'b'
 						word = copy.deepcopy(front_piece)
 						word.extend(candidate)
+
+						# check if the word is cyclically reduced when if "is_reduced" flag is True
+						if is_reduced:
+							if not is_cyclically_reduced(word):
+								continue
 						print("append word: ", word)
 						a_words.append(word)
 		if (len(a_words) == 2 * 3**(length-1)):
@@ -670,13 +697,18 @@ def word_gen(length):
 				if deficient_size <= 0:
 					print("invalid size of deficient_size", abs(i), length)
 					return
-				backpiece_candidates = word_gen(deficient_size)
+				backpiece_candidates = word_gen(deficient_size, False)
 				print("back piece candidates", backpiece_candidates, "front: ", front_piece)
 				for candidate in backpiece_candidates:
 					print("caddidate: ", candidate)
 					if candidate[0] != 0: # check if the candidate starts with 'a'
 						word = copy.deepcopy(front_piece)
 						word.extend(candidate)
+
+						# check if the word is cyclically reduced when if "is_reduced" flag is True
+						if is_reduced:
+							if not is_cyclically_reduced(word):
+								continue
 						print("append word: ", word)
 						b_words.append(word)
 
