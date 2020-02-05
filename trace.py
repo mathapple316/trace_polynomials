@@ -154,7 +154,8 @@ def tr_manual(m):
 	print("start idx_gen, for compute trace of", m)
 	for idx in idx_generator(dim, 2):
 		print("-----------------")
-		summand = ((-1)**sum(idx)) * (vector_fullpoly(m-ones+idx, tr_for_idx(dim, idx)))
+		summand = ((-1)**sum(idx)) * vector_fullpoly(m-ones+idx, tr_for_idx(dim, idx))
+#		summand = ((-1)**sum(idx)) * vector_fullpoly(m-ones+idx, tr_for_idx(dim, idx))
 		result += summand
 		print("summand : ", summand, "idx", idx)
 	print("result of tr(",m,"), :", expand(result))
@@ -162,7 +163,7 @@ def tr_manual(m):
 
 
 def tr_for_idx(dim, index):
-	print("tr_for_idx :", index)
+	print("tr_for_idx :", index, dim)
 
 	if dim % 2 != 0:
 		fprint("ERROR! odd dimension")
@@ -170,6 +171,7 @@ def tr_for_idx(dim, index):
 
 
 	if dim == 2:
+		print(("dimension 2 if"))
 		if index[0] == 0 and index[1] == 0:
 			print("tr_for_basis, ", index, "return 2")
 			return 2
@@ -194,7 +196,7 @@ def tr_for_idx(dim, index):
 			else:
 				continue
 
-
+# dimesion => dimension-2 using the property of index and trace
 def reduce_idx(index, dim, i):
 	if dim == 2:
 		fprint("ERROR!!!!")
@@ -254,6 +256,7 @@ def idx_generator(dim, max_val):
 
 
 def vector_fullpoly(vector, full_poly):
+	print("vector fullpoly,", full_poly)
 	deg_z = deg_of(full_poly, z)
 	result = 0
 
@@ -262,6 +265,7 @@ def vector_fullpoly(vector, full_poly):
 		if coeff_of_kpower(full_poly, k) == 0:
 			continue
 
+		print("goto coeffpoly,", coeff_of_kpower(full_poly, k))
 		result += vector_coeffpoly(vector, coeff_of_kpower(full_poly, k)) * (z**k)
 
 	return expand(result)
@@ -274,16 +278,19 @@ def vector_coeffpoly(vector, coeff_poly):
 	if deg_of(coeff_poly, x) == 0 and deg_of(coeff_poly, y) == 0:
 		return coeff_poly * large_b(vector, x, y)
 	else:
-		summand_array = str(coeff_poly).split('+')
+		summand_array = str(coeff_poly).replace(' + ', ' +').replace(' - ',' -').split(' ')
 		num_of_summand = len(summand_array)
+		print("summand_array", summand_array, num_of_summand)
 
-	for i in range(0, num_of_summand):
-		sum += vector_coeffmono(vector, summand_array[i],
-																										np.zeros(len(vector), dtype=int))
+	for value in summand_array:
+		print(vector, value)
+		sum += vector_coeffmono(vector, sympify(value), np.zeros(len(vector), 
+		dtype=int))
 	return sum
 
 
 def vector_coeffmono(vector, coeff_mono, flag):
+	print("coeffmono", coeff_mono)
 	x_deg = deg_of(coeff_mono, x)
 	y_deg = deg_of(coeff_mono, y)
 
@@ -293,17 +300,24 @@ def vector_coeffmono(vector, coeff_mono, flag):
 
 	if x_deg != 0:
 		for i in range(0, x_deg):
-			flag[2 * i] = 1
+		       	flag[2 * i] = 1
 
 	if y_deg != 0:
 		for i in range(0, y_deg):
 			flag[2 * i + 1] = 1
 
-	return large_b_with_flags(vector, flag)
+	print("go to large_b with flags, flag", vector, flag, coeff_mono)
+	
+	if x_deg == 0 and y_deg == 0:
+		coeff = coeff_mono
+	else: 
+		coeff = poly(coeff_mono).subs({x:1,y:1})
+	
+	return coeff * large_b_with_flags(vector, flag)
 
 
 def large_b_with_flags(vector, flag):
-	if np.all(flag == 0):
+	if np.all(np.array(flag) == 0):
 		return large_b(vector, x, y)
 
 	else:
@@ -767,12 +781,10 @@ if __name__ == "__main__":
 	sys.setrecursionlimit(10000)
 	m = inputAndInit()
 	t0 = time()
-	expr = tr(m)
+	expr = tr_manual(m)
+	expr2 = tr(m)
+	diff = expr - expr2
 	print("calculation time : ", time() - t0)
 	print("result : ", expr)
-	fileinfo = open("wordclass_4.txt", 'w', -1, "utf-8")
-	result = word_class(word_gen(4))
-	for row in result:
-		fprint(row)
 # check(m,expr)
 
