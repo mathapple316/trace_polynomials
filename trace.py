@@ -12,9 +12,12 @@ from sympy import degree as deg_of
 
 
 def fprint(*args):
-	print(*args, file=fileinfo)
+#	print(*args, file=fileinfo)
 	return
 
+def gprint(*args):
+	print(*args, file=fileinfo)
+	return
 
 ################################################################################
 # EPSILON RELATED
@@ -186,7 +189,7 @@ def tr_for_idx(dim, index):
 	if np.all(np.array(index) == 1):
 		return tau(dim/2, z)
 	else:
-		for i in range(0, dim):
+		for i in range(1, dim - 1):
 			if index[i] == 0:
 				reduced_idx = reduce_idx(index, dim, i)
 				print("reduced to :", reduced_idx)
@@ -522,6 +525,7 @@ def inputAndInit():
 
 
 def tr(m):
+	x,y,z = symbols('x,y,z')
 	# initiation
 
 	if np.size(m) % 2 != 0:
@@ -654,7 +658,7 @@ def word_gen(length, is_reduced):
 			# the case where the word start with b
 			if i == 0:
 				continue
-			print ("i:",i,"a_words:",a_words)
+			fprint ("i:",i,"a_words:",a_words)
 			front_piece = [i, 0]
 			if abs(i) == length:
 				a_words.append(front_piece)
@@ -663,10 +667,10 @@ def word_gen(length, is_reduced):
 			else:
 				deficient_size = length - abs(i) # the size must be added after front_piece
 				if deficient_size <= 0:
-					print("invalid size of deficient_size", abs(i), length)
+					fprint("invalid size of deficient_size", abs(i), length)
 					return
 				backpiece_candidates = word_gen(deficient_size, False)
-				print("back piece candidates", backpiece_candidates, "front: ", front_piece)
+				fprint("back piece candidates", backpiece_candidates, "front: ", front_piece)
 				for candidate in backpiece_candidates:
 					if candidate[0] == 0: # check if the candidate starts with 'b'
 						word = copy.deepcopy(front_piece)
@@ -676,17 +680,17 @@ def word_gen(length, is_reduced):
 						if is_reduced:
 							if not is_cyclically_reduced(word):
 								continue
-						print("append word: ", word)
+						fprint("append word: ", word)
 						a_words.append(word)
 		if (len(a_words) == 2 * 3**(length-1)):
-			print("a_words : ", a_words)
+			fprint("a_words : ", a_words)
 
 		# make b_words
 		for i in range(-length, length+1):
 			# (0,0, ... ) case
 			if i == 0:
 				continue
-			print ("i:",i,"b_words:",b_words)
+			fprint ("i:",i,"b_words:",b_words)
 			front_piece = [0,i]
 			if abs(i) == length:
 				b_words.append(front_piece)
@@ -695,12 +699,12 @@ def word_gen(length, is_reduced):
 			else:
 				deficient_size = length - abs(i) # the size must be added after front_piece
 				if deficient_size <= 0:
-					print("invalid size of deficient_size", abs(i), length)
+					fprint("invalid size of deficient_size", abs(i), length)
 					return
 				backpiece_candidates = word_gen(deficient_size, False)
-				print("back piece candidates", backpiece_candidates, "front: ", front_piece)
+				fprint("back piece candidates", backpiece_candidates, "front: ", front_piece)
 				for candidate in backpiece_candidates:
-					print("caddidate: ", candidate)
+					fprint("caddidate: ", candidate)
 					if candidate[0] != 0: # check if the candidate starts with 'a'
 						word = copy.deepcopy(front_piece)
 						word.extend(candidate)
@@ -709,15 +713,15 @@ def word_gen(length, is_reduced):
 						if is_reduced:
 							if not is_cyclically_reduced(word):
 								continue
-						print("append word: ", word)
+						fprint("append word: ", word)
 						b_words.append(word)
 
 		if (len(b_words) == 2 * 3**(length - 1)):
-			print("b_words : ", b_words)
+			fprint("b_words : ", b_words)
 
 	result = a_words
 	result.extend(b_words)
-	print("len: ", len(result), " result :", result)
+	fprint("len: ", len(result), " result :", result)
 
 	return result
 
@@ -733,7 +737,12 @@ def word_class(words):
 	max_idx = 1
 	print("number of words :", count)
 	tr_class = [0]
+	index = 1
 	for word in words:
+		print(index,"/",count)
+		index = index + 1
+
+		word = reduce(word)
 		tracepoly = tr(word)
 
 		for idx in range(1, max_idx + 1):
@@ -751,6 +760,26 @@ def word_class(words):
 				break
 	return tr_class
 
+def reduce(vector):
+	print("input", vector)
+	dim = len(vector)
+
+	if dim == 2:
+		print("reduced, return", vector)
+		return vector
+
+	for i in range(1, dim-1):
+		if vector[i] == 0:
+			vector = reduce_idx(vector, dim, i)
+			return reduce(vector)
+
+	print("reduced, return", vector)
+	return vector
+
+########################################################################################################################
+# TIME RELATED
+########################################################################################################################
+
 def time_tr(m):
 	t0 = time()
 	expr = tr(m)
@@ -763,16 +792,25 @@ def time_tr_manual(m):
 	print("cal time: ", time() - t0)
 	return expr
 
-if __name__ == "__main__":
-	sys.setrecursionlimit(10000)
-	m = inputAndInit()
-	t0 = time()
-	expr = tr(m)
-	print("calculation time : ", time() - t0)
-	print("result : ", expr)
-	fileinfo = open("wordclass_4.txt", 'w', -1, "utf-8")
-	result = word_class(word_gen(4))
-	for row in result:
-		fprint(row)
-# check(m,expr)
+########################################################################################################################
 
+if __name__ == "__main__":
+	init_printing(order='rev-lex')
+	length = int(input("input the length of the words\n").strip())
+	filename = str(length) + ".txt"
+	fileinfo = open(filename, 'w', -1, "utf-8")
+	print("legnth: ", length)
+	result = word_gen(length, True)
+	result2 = word_class(result)
+	gprint("# of all reduced words : ", len(result))
+	cnt = 1
+	checksum = 0
+	for tr_class in result2:
+		if type(tr_class) == int:
+			continue
+		gprint("------------------------------")
+		gprint("size of ",cnt,"th class:", len(tr_class[1]))
+		checksum = checksum + len(tr_class[1])
+		gprint(tr_class)
+		cnt = cnt+1
+	gprint(checksum)
