@@ -20,6 +20,49 @@ def gprint(*args):
 	return
 
 ################################################################################
+# ENDOMORPHISM on F_{2}
+################################################################################
+
+
+def endo(fa, fb, W):
+	output = list([])
+	
+	#compute inv of f_a, f_b
+	fa_inv = inv(fa)
+	fb_inv = inv(fb)
+	
+	for i in range(0,len(W)):
+		print("i:", i,"/",len(W))
+		# append f(a)^n
+		if i%2 == 0:
+			f = fa
+			f_inv = fa_inv
+		else:
+			f = fb
+			f_inv = fb_inv
+		
+			# k > 0 case
+		for k in range(0,W[i]):
+			output.extend(f)
+			print("k, output", k, output)
+			# k < 0 case
+		for k in range(W[i],0):
+			output.extend(f_inv)	
+			print("k, output", k, output)
+	return reduce(output)
+		
+# return inverse of the given word
+def inv(W):
+	length = len(W)
+	inv = [0]
+	
+	for i in range(0, length):
+		inv.append(-W[length-1-i])
+
+	inv.append(0)
+	return reduce(inv)
+	
+################################################################################
 # EPSILON RELATED
 ################################################################################
 
