@@ -848,10 +848,10 @@ def print_table(result):
 	for size in size_arr:
 		for item in result:
 			if type(item) != int and len(item[1]) == size:
-				raw = str(print_word(item[1][1]))+"	&	"+str(len(item[1]))+"	&	$"+str(latex(item[0]))+"$	\\\\ \hline"
+				cnt = cnt + 1
+				raw = str(cnt) + "	&	" + str(print_word(item[1][1]))+"	&	"+str(len(item[1]))+"	&	$"+str(latex(item[0]))+"$	\\\\ \hline"
 				print(raw.replace("1.0","").replace(".0",""))
 				
-				cnt = cnt + 1
 	if cnt != result[0]:
 		print("ERROR")
 	print("end print, count checked")
