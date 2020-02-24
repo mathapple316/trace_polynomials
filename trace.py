@@ -843,6 +843,7 @@ def print_table(result):
 	for item in result:
 		if type(item) != int and len(item[1]) not in size_arr:
 			size_arr.append(len(item[1]))
+	size_arr.sort()
 	
 	for size in size_arr:
 		for item in result:
