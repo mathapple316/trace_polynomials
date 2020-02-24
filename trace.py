@@ -848,7 +848,9 @@ def print_table(result):
 	for size in size_arr:
 		for item in result:
 			if type(item) != int and len(item[1]) == size:
-				print(print_word(item[1][1]), "	&	", len(item[1]), "	&	", "$",latex(item[0]),"$	\\\\ \hline")
+				raw = str(print_word(item[1][1]))+"	&	"+str(len(item[1]))+"	&	$"+str(latex(item[0]))+"$	\\\\ \hline"
+				print(raw.replace("1.0","").replace(".0",""))
+				
 				cnt = cnt + 1
 	if cnt != result[0]:
 		print("ERROR")
@@ -868,6 +870,9 @@ def print_word(vector):
 		
 		if power == 0:
 			continue
+		elif power == 1:
+			item = alphabet
+			output = output + item
 		else:
 			item = alphabet + '^{' + str(power) + '}'
 			output = output + item 
