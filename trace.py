@@ -836,13 +836,22 @@ def time_tr_manual(m):
 	return expr
 
 def print_table(result):
-	print("start print")
-	cnt=1
+	print("start print, cnt:", result[0])
+	cnt=0
+	size_arr = []
+	
 	for item in result:
-		if type(item) != int:
-			print(print_word(item[1][1]), "	&	", len(item[1]), "	&	", "$",latex(item[0]),"$	\\\\ \hline")
-			cnt = cnt + 1
-	print("end print")
+		if type(item) != int and len(item[1]) not in size_arr:
+			size_arr.append(len(item[1]))
+	
+	for size in size_arr:
+		for item in result:
+			if type(item) != int and len(item[1]) == size:
+				print(print_word(item[1][1]), "	&	", len(item[1]), "	&	", "$",latex(item[0]),"$	\\\\ \hline")
+				cnt = cnt + 1
+	if cnt != result[0]:
+		print("ERROR")
+	print("end print, count checked")
 	
 def print_word(vector):
 	if len(vector)%2 != 0:
