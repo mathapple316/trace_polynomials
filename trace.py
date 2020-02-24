@@ -835,6 +835,34 @@ def time_tr_manual(m):
 	print("cal time: ", time() - t0)
 	return expr
 
+def print_table(result):
+	print("start print")
+	cnt=1
+	for item in result:
+		if type(item) != int:
+			print(print_word(item[1][1]), "	&	", len(item[1]), "	&	", "$",latex(item[0]),"$	\\\\ \hline")
+			cnt = cnt + 1
+	print("end print")
+	
+def print_word(vector):
+	if len(vector)%2 != 0:
+		print("ERROR")
+		return
+	output = '$'
+	
+	for index,power in enumerate(vector):
+		if index%2 == 0:
+			alphabet = 'a'
+		else:
+			alphabet = 'b'
+		
+		if power == 0:
+			continue
+		else:
+			item = alphabet + '^{' + str(power) + '}'
+			output = output + item 
+	return output + '$'
+
 ########################################################################################################################
 
 if __name__ == "__main__":
@@ -846,14 +874,4 @@ if __name__ == "__main__":
 	result = word_gen(length, True)
 	result2 = word_class(result)
 	gprint("# of all reduced words : ", len(result))
-	cnt = 1
-	checksum = 0
-	for tr_class in result2:
-		if type(tr_class) == int:
-			continue
-		gprint("------------------------------")
-		gprint("size of ",cnt,"th class:", len(tr_class[1]))
-		checksum = checksum + len(tr_class[1])
-		gprint(tr_class)
-		cnt = cnt+1
-	gprint(checksum)
+	
