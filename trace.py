@@ -70,8 +70,6 @@ def inv(W):
 def eps_maker(dim):
 	''' Using generator, it makes all possible epsilons '''
 	fprint("start eps_generator, dim: ", dim)
-	print(
-		"-----------------------------------------------------------------------")
 	ones = np.ones(dim, dtype=int)
 	count = 0
 	output = np.zeros(dim, dtype=int)
@@ -632,6 +630,7 @@ def degree2(mu):
 	return int(cnt/2)
 		
 def tr2(m):
+	m = reduce(m)
 	x,y,z = symbols('x,y,z')
 	# initiation
 
@@ -669,7 +668,7 @@ def tr2(m):
 			fprint(" large_b : ", largeb)
 			fprint(" sgn : ", ((-1)**(r - deg)))
 			fprint(" tau(deg) : ", tau(deg, z))
-			print(" summand : ", summand)
+			fprint(" summand : ", summand)
 			expr2 = expr2 + summand
 			fprint(
 				"-----------------------------------------------------------------------")
@@ -872,12 +871,10 @@ def reduce(vector):
 	if dim == 2:
 		return vector
 
-	for i in range(1, dim-1):
-		if vector[i] == 0:
-			vector = reduce_idx(vector, dim, i)
+	for idx,entry in enumerate(vector):
+		if entry == 0:
+			vector = reduce_idx(vector, dim, idx)
 			return reduce(vector)
-
-	print("reduced, return", vector)
 	return vector
 
 ########################################################################################################################
