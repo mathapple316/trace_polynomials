@@ -623,6 +623,69 @@ def tr(m):
 	# pretty_print(expr, order='rev-lex')
 	return expr
 
+def degree2(mu):
+	temp = reduce(np.ones(len(mu),dtype=int)-abs(np.array(mu)))
+	cnt = 0
+	for entry in temp:
+		if entry != 0:
+			cnt = cnt + 1
+	return int(cnt/2)
+		
+def tr2(m):
+	x,y,z = symbols('x,y,z')
+	# initiation
+
+	if np.size(m) % 2 != 0:
+		dim = np.size(m) + 1
+	else:
+		dim = np.size(m)
+
+	r = (int)(np.size(m) / 2)
+
+	# Compute expr1
+	expr1 = expand((1 / 2) * tau(r, z) * large_b(m, x, y))
+
+	# Compute expr2
+	gen = eps_maker(dim)
+	alt_count = 0
+	expr2 = 0
+	summand = 0
+	deg = 0
+	largeb = 0
+	for mu in gen:
+		if is_alternating(mu) == True:
+			alt_count = alt_count + 1
+			fprint(alt_count, ". mu:", mu)
+			deg = degree2(mu)
+			fprint(" degree of mu : ", deg, "\n")
+			largeb = large_b(m + mu, x, y)
+			if largeb == 0:
+				summand = 0
+				fprint(
+					"-----------------------------------------------------------------------")
+				continue
+			else:
+					summand = expand(((-1)**(r - deg)) * tau(deg, z) * largeb)
+			fprint(" large_b : ", largeb)
+			fprint(" sgn : ", ((-1)**(r - deg)))
+			fprint(" tau(deg) : ", tau(deg, z))
+			print(" summand : ", summand)
+			expr2 = expr2 + summand
+			fprint(
+				"-----------------------------------------------------------------------")
+
+	if alt_count != (2**dim) - 1:
+		print("ERROR!!!")
+	fprint(" expr1 : ", expr1)
+	fprint(" expr2 : ", expr2)
+	fprint(
+		"-----------------------------------------------------------------------")
+	expr = expand(expr1 + (1 / 2) * expr2)
+	fprint(" RESULT is : ")
+	fprint(expr)
+	# print("expr :", expr)
+	# pretty_print(expr, order='rev-lex')
+	return expr
 
 def check(m, expr):
 	if np.size(m) % 2 != 0:
@@ -645,8 +708,8 @@ def check(m, expr):
 	fprint(" Calculation Example ")
 	fprint(" A : ", A)
 	fprint(" B : ", B)
-	fprint(" trace(C) : ", trace(C))
-	fprint(" expr.sub : ", expr.subs({x: trace(A), y: trace(B), z: trace(A * B)}))
+	print(" trace(C) : ", trace(C))
+	print(" expr.sub : ", expr.subs({x: trace(A), y: trace(B), z: trace(A * B)}))
 
 	print("")
 	print(" RESULT is : \n ")
@@ -713,7 +776,7 @@ def word_gen(length, is_reduced):
 					fprint("invalid size of deficient_size", abs(i), length)
 					return
 				backpiece_candidates = word_gen(deficient_size, False)
-				fprint("back piece candidates", backpiece_candidates, "front: ", front_piece)
+				print("back piece candidates", backpiece_candidates, "front: ", front_piece)
 				for candidate in backpiece_candidates:
 					if candidate[0] == 0: # check if the candidate starts with 'b'
 						word = copy.deepcopy(front_piece)
@@ -723,10 +786,10 @@ def word_gen(length, is_reduced):
 						if is_reduced:
 							if not is_cyclically_reduced(word):
 								continue
-						fprint("append word: ", word)
+						print("append word: ", word)
 						a_words.append(word)
 		if (len(a_words) == 2 * 3**(length-1)):
-			fprint("a_words : ", a_words)
+			print("a_words : ", a_words)
 
 		# make b_words
 		for i in range(-length, length+1):
@@ -804,11 +867,9 @@ def word_class(words):
 	return tr_class
 
 def reduce(vector):
-	print("input", vector)
 	dim = len(vector)
 
 	if dim == 2:
-		print("reduced, return", vector)
 		return vector
 
 	for i in range(1, dim-1):
