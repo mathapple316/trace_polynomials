@@ -5,6 +5,8 @@ import numpy as np
 from sympy import *
 from sympy import degree as deg_of
 
+x,y,z = symbols('x,y,z')
+
 ################################################################################
 # FILE LOGGING
 ################################################################################
@@ -378,13 +380,17 @@ def coeff_of_kpower(expr, power):
 def roll_until(eps, num):
         ''' roll(-1) [eps] until first entry becomes [num] '''
         size_eps = np.size(eps)
-
-        if np.all(eps != num) == True:
-                fprint("no entry is ", num, " stop rolling. ")
-                return eps
-
-        while (eps[0] != num):
+        cnt = 0
+        for entry in eps:
+        	if entry == num:
+        		break
+        	else:
+        		continue
+        	print("no entry is ", num, " stop rolling. ")
+        	return eps
+        while (eps[0] != num) and  (cnt < size_eps):
                 eps = np.roll(eps, -1)
+                cnt = cnt + 1
         fprint('rolling: ', eps)
         return eps
 
@@ -623,8 +629,13 @@ def tr(m):
 
 def degree2(mu):
         mu_diff = reduce(np.ones(len(mu),dtype=int)-abs(np.array(mu)))
+        print("mu_diff: ",mu_diff)
         poly = tr(mu_diff)
-        return deg_of(poly.subs({x:0,y:0}),z)
+        poly_z = poly.subs({x:0,y:0})
+        if poly_z == 0:
+        	return 0
+        else:
+        	 return deg_of(poly_z,z)
                 
 def tr2(m):
         m = reduce(m)
@@ -938,10 +949,12 @@ def print_word(vector):
 if __name__ == "__main__":
         init_printing(order='rev-lex')
         length = int(input("input the length of the words\n").strip())
-        filename = str(length) + ".txt"
-        fileinfo = open(filename, 'w', -1, "utf-8")
-        print("legnth: ", length)
-        result = word_gen(length, True)
-        result2 = word_class(result)
-        gprint("# of all reduced words : ", len(result))
+        m=[1,0,0,-1,0,1,0,0,-1,0,1,-1,0,0]
+        degree(m)
+        #filename = str(length) + ".txt"
+        #fileinfo = open(filename, 'w', -1, "utf-8")
+        #print("legnth: ", length)
+        #result = word_gen(length, True)
+        #result2 = word_class(result)
+        #gprint("# of all reduced words : ", len(result))
         
