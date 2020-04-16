@@ -4,6 +4,7 @@ import copy
 import numpy as np
 from sympy import *
 from sympy import degree as deg_of
+x,y,z=symbols('x,y,z')
 
 ################################################################################
 # FILE LOGGING
@@ -185,9 +186,9 @@ def degree3(eps_input):
                 if change_sgn == True:
                     sgn = -sgn
                     change_sgn = False
-                    print("change sgn")
+                    #print("change sgn")
                 count = count+sgn
-                print("count:",count)
+                #print("count:",count)
             elif entry == 3:
                 continue
             else:
@@ -195,6 +196,7 @@ def degree3(eps_input):
 
         if count%2 != 0:
             print("ERROR")
+            return
         
         return int(abs(count/2))
 
@@ -410,9 +412,12 @@ def coeff_of_kpower(expr, power):
 def roll_until(eps, num):
         ''' roll(-1) [eps] until first entry becomes [num] '''
         size_eps = np.size(eps)
-
-        if np.all(eps != num) == True:
-                fprint("no entry is ", num, " stop rolling. ")
+        
+        for idx,entry in enumerate(eps):
+            if entry == num:
+                break
+            elif idx == len(eps)-1:
+                fprint("no num in eps")
                 return eps
 
         while (eps[0] != num):
@@ -621,7 +626,7 @@ def tr(m):
                 if is_alternating(mu):
                         alt_count = alt_count + 1
                         fprint(alt_count, ". mu:", mu)
-                        deg = degree(mu)
+                        deg = degree3(mu)
                         fprint(" degree of mu : ", deg, "\n")
                         largeb = large_b(m + mu, x, y)
                         if largeb == 0:
@@ -1026,11 +1031,11 @@ def print_word(vector):
 
 if __name__ == "__main__":
         init_printing(order='rev-lex')
-        length = int(input("input the length of the words\n").strip())
-        filename = str(length) + ".txt"
-        fileinfo = open(filename, 'w', -1, "utf-8")
-        print("legnth: ", length)
-        result = word_gen(length, True)
-        result2 = word_class(result)
-        gprint("# of all reduced words : ", len(result))
+        #length = int(input("input the length of the words\n").strip())
+        #filename = str(length) + ".txt"
+        # fileinfo = open(filename, 'w', -1, "utf-8")
+        #print("legnth: ", length)
+        #result = word_gen(length, True)
+        # result2 = word_class(result)
+        # gprint("# of all reduced words : ", len(result))
         
