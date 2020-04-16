@@ -381,7 +381,7 @@ def vector_coeffmono(vector, coeff_mono, flag):
 
 
 def large_b_with_flags(vector, flag):
-        if np.all(flag == 0):
+        if np.all(np.array(flag) == 0):
                 return large_b(vector, x, y)
 
         else:
@@ -719,7 +719,12 @@ def tr2(m):
         # pretty_print(expr, order='rev-lex')
         return expr
 
-def check(m, expr):
+def check(m,expr):
+    check1(m,expr)
+    check2(m,expr)
+    check3(m,expr)
+
+def check1(m, expr):
         if np.size(m) % 2 != 0:
                 dim = np.size(m) + 1
         else:
