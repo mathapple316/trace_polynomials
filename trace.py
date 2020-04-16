@@ -5,8 +5,6 @@ import numpy as np
 from sympy import *
 from sympy import degree as deg_of
 
-x,y,z = symbols('x,y,z')
-
 ################################################################################
 # FILE LOGGING
 ################################################################################
@@ -167,6 +165,38 @@ def degree(eps_input):
 
         return (int)(1 / 2 * count)
 
+def degree3(eps_input):
+        '''compute the "degree" with new method'''
+
+        eps = eps_input.copy()
+        size = np.size(eps)
+        count = 0
+        sgn = 1
+        change_sgn = False
+
+        # Roll left until fir entry becomes 0
+        eps = roll_until(eps, 0)
+
+        # Cut out
+        eps = cut_out(eps)
+
+        for entry in eps:
+            if entry == 0:
+                if change_sgn == True:
+                    sgn = -sgn
+                    change_sgn = False
+                    print("change sgn")
+                count = count+sgn
+                print("count:",count)
+            elif entry == 3:
+                continue
+            else:
+                change_sgn = True
+
+        if count%2 != 0:
+            print("ERROR")
+        
+        return int(abs(count/2))
 
 ################################################################################
 # MANUAL EXPANSION
@@ -380,17 +410,13 @@ def coeff_of_kpower(expr, power):
 def roll_until(eps, num):
         ''' roll(-1) [eps] until first entry becomes [num] '''
         size_eps = np.size(eps)
-        cnt = 0
-        for entry in eps:
-        	if entry == num:
-        		break
-        	else:
-        		continue
-        	print("no entry is ", num, " stop rolling. ")
-        	return eps
-        while (eps[0] != num) and  (cnt < size_eps):
+
+        if np.all(eps != num) == True:
+                fprint("no entry is ", num, " stop rolling. ")
+                return eps
+
+        while (eps[0] != num):
                 eps = np.roll(eps, -1)
-                cnt = cnt + 1
         fprint('rolling: ', eps)
         return eps
 
@@ -429,7 +455,6 @@ def cut_out(eps_input):
                 even_leng = even_leng - 2
         fprint("cut out : ", eps)
         return eps
-
 
 ################################################################################
 # Deprecated
@@ -629,13 +654,8 @@ def tr(m):
 
 def degree2(mu):
         mu_diff = reduce(np.ones(len(mu),dtype=int)-abs(np.array(mu)))
-        print("mu_diff: ",mu_diff)
         poly = tr(mu_diff)
-        poly_z = poly.subs({x:0,y:0})
-        if poly_z == 0:
-        	return 0
-        else:
-        	 return deg_of(poly_z,z)
+        return deg_of(poly.subs({x:0,y:0}),z)
                 
 def tr2(m):
         m = reduce(m)
@@ -702,6 +722,64 @@ def check(m, expr):
 
         A = Matrix([[2, 1], [0, 1 / 2]])
         B = Matrix([[3, 0], [1, 1 / 3]])
+        C = Matrix([[1, 0], [0, 1]])
+
+        for i in range(dim):
+                if i % 2 == 0:
+                        C = C * A**(m[i])
+                else:
+                        C = C * B**(m[i])
+
+        fprint(
+                "-----------------------------------------------------------------------")
+        fprint(" Calculation Example ")
+        fprint(" A : ", A)
+        fprint(" B : ", B)
+        print(" trace(C) : ", trace(C))
+        print(" expr.sub : ", expr.subs({x: trace(A), y: trace(B), z: trace(A * B)}))
+
+        print("")
+        print(" RESULT is : \n ")
+        pretty_print(expr, order='rev-lex')
+        print("\n Read " + filename + " for detailed calculation. ")
+
+def check2(m, expr):
+        if np.size(m) % 2 != 0:
+                dim = np.size(m) + 1
+        else:
+                dim = np.size(m)
+
+        A = Matrix([[2, 1], [1, 1]])
+        B = Matrix([[3, 1], [2, 1]])
+        C = Matrix([[1, 0], [0, 1]])
+
+        for i in range(dim):
+                if i % 2 == 0:
+                        C = C * A**(m[i])
+                else:
+                        C = C * B**(m[i])
+
+        fprint(
+                "-----------------------------------------------------------------------")
+        fprint(" Calculation Example ")
+        fprint(" A : ", A)
+        fprint(" B : ", B)
+        print(" trace(C) : ", trace(C))
+        print(" expr.sub : ", expr.subs({x: trace(A), y: trace(B), z: trace(A * B)}))
+
+        print("")
+        print(" RESULT is : \n ")
+        pretty_print(expr, order='rev-lex')
+        print("\n Read " + filename + " for detailed calculation. ")
+
+def check3(m, expr):
+        if np.size(m) % 2 != 0:
+                dim = np.size(m) + 1
+        else:
+                dim = np.size(m)
+
+        A = Matrix([[4, 1], [0, 1 / 4]])
+        B = Matrix([[2, 1], [1, 1]])
         C = Matrix([[1, 0], [0, 1]])
 
         for i in range(dim):
@@ -949,12 +1027,10 @@ def print_word(vector):
 if __name__ == "__main__":
         init_printing(order='rev-lex')
         length = int(input("input the length of the words\n").strip())
-        m=[1,0,0,-1,0,1,0,0,-1,0,1,-1,0,0]
-        degree(m)
-        #filename = str(length) + ".txt"
-        #fileinfo = open(filename, 'w', -1, "utf-8")
-        #print("legnth: ", length)
-        #result = word_gen(length, True)
-        #result2 = word_class(result)
-        #gprint("# of all reduced words : ", len(result))
+        filename = str(length) + ".txt"
+        fileinfo = open(filename, 'w', -1, "utf-8")
+        print("legnth: ", length)
+        result = word_gen(length, True)
+        result2 = word_class(result)
+        gprint("# of all reduced words : ", len(result))
         
