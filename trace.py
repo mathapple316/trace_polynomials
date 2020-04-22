@@ -200,6 +200,52 @@ def degree3(eps_input):
         
         return int(abs(count/2))
 
+def degree4(eps_input):
+        '''compute the "degree" with new method'''
+        
+        eps = eps_input.copy()
+        dim  =  np.size(eps)
+
+        if dim%2 != 0:
+            print("ERROR")
+            return
+        else:
+            r = int(dim/2)
+        
+        # All entries are one => return r
+        # Else roll left until first entry becoems zero
+        if np.all(np.array(eps) == 1):
+            return r
+        else:
+            eps = roll_until(eps, 0)
+
+        #Collapsing
+        for idx,entry in enumerate(eps):
+            if (idx == 0):
+                continue
+            elif (eps[idx] * eps[idx-1] == -1):
+                eps[idx - 1] = 3
+                eps[idx] = 3
+                continue
+            else:
+                continue
+
+        #Compute the degree of eps
+        sgn = 1
+        count = 0
+        
+        for entry in eps:
+            if entry == 3:
+                continue
+            elif entry == 0:
+                count = count + sgn
+                continue
+            else:
+                sgn = -sgn
+                continue
+
+        return int(abs(count/2))
+
 ################################################################################
 # MANUAL EXPANSION
 ################################################################################
@@ -626,7 +672,7 @@ def tr(m):
                 if is_alternating(mu):
                         alt_count = alt_count + 1
                         fprint(alt_count, ". mu:", mu)
-                        deg = degree3(mu)
+                        deg = degree4(mu)
                         fprint(" degree of mu : ", deg, "\n")
                         largeb = large_b(m + mu, x, y)
                         if largeb == 0:
@@ -688,7 +734,7 @@ def tr2(m):
                 if is_alternating(mu) == True:
                         alt_count = alt_count + 1
                         fprint(alt_count, ". mu:", mu)
-                        deg = degree2(mu)
+                        deg = degree(mu)
                         fprint(" degree of mu : ", deg, "\n")
                         largeb = large_b(m + mu, x, y)
                         if largeb == 0:
@@ -748,11 +794,6 @@ def check1(m, expr):
         print(" trace(C) : ", trace(C))
         print(" expr.sub : ", expr.subs({x: trace(A), y: trace(B), z: trace(A * B)}))
 
-        print("")
-        print(" RESULT is : \n ")
-        pretty_print(expr, order='rev-lex')
-        print("\n Read " + filename + " for detailed calculation. ")
-
 def check2(m, expr):
         if np.size(m) % 2 != 0:
                 dim = np.size(m) + 1
@@ -777,11 +818,6 @@ def check2(m, expr):
         print(" trace(C) : ", trace(C))
         print(" expr.sub : ", expr.subs({x: trace(A), y: trace(B), z: trace(A * B)}))
 
-        print("")
-        print(" RESULT is : \n ")
-        pretty_print(expr, order='rev-lex')
-        print("\n Read " + filename + " for detailed calculation. ")
-
 def check3(m, expr):
         if np.size(m) % 2 != 0:
                 dim = np.size(m) + 1
@@ -805,11 +841,6 @@ def check3(m, expr):
         fprint(" B : ", B)
         print(" trace(C) : ", trace(C))
         print(" expr.sub : ", expr.subs({x: trace(A), y: trace(B), z: trace(A * B)}))
-
-        print("")
-        print(" RESULT is : \n ")
-        pretty_print(expr, order='rev-lex')
-        print("\n Read " + filename + " for detailed calculation. ")
 
 #################################################################################
 # WORD RELATED
@@ -945,6 +976,41 @@ def word_class(words):
 
                 word = reduce(word)
                 tracepoly = tr(word)
+
+                for idx in range(1, max_idx + 1):
+
+                        if idx == max_idx:
+                                tr_class.append([tracepoly,[word]])
+                                max_idx = max_idx + 1
+                                tr_class[0] = tr_class[0] + 1
+                                break
+
+                        if tr_class[idx][0] != tracepoly:
+                                idx = idx + 1
+                        else:
+                                tr_class[idx][1].append(word)
+                                break
+        return tr_class
+
+def word_class2(words):
+        """
+        Input : List of words of same length
+        Output : List of lists, and each list consists of given words whose traces are same
+        Comment :
+        tr_class[0] = [the number of classes]
+        tr_class[i] = [value, [word1, word2, word3, ...]]
+        """
+        count = len(words)
+        max_idx = 1
+        print("number of words :", count)
+        tr_class = [0]
+        index = 1
+        for word in words:
+                print(index,"/",count)
+                index = index + 1
+
+                word = reduce(word)
+                tracepoly = tr2(word)
 
                 for idx in range(1, max_idx + 1):
 
