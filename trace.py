@@ -186,6 +186,7 @@ def degree3(eps_input):
                 if change_sgn == True:
                     sgn = -sgn
                     change_sgn = False
+
                     #print("change sgn")
                 count = count+sgn
                 #print("count:",count)
@@ -202,9 +203,8 @@ def degree3(eps_input):
 
 def degree4(eps_input):
         '''compute the "degree" with new method'''
-        
         eps = eps_input.copy()
-        dim  =  np.size(eps)
+        dim = np.size(eps)
 
         if dim%2 != 0:
             print("ERROR")
@@ -220,14 +220,15 @@ def degree4(eps_input):
             eps = roll_until(eps, 0)
 
         #Collapsing
-        for idx,entry in enumerate(eps):
-            if (idx == 0):
-                continue
-            elif (eps[idx] * eps[idx-1] == -1):
+        idx = 2
+        while (idx < dim):
+            if (eps[idx] * eps[idx-1] == -1):
                 eps[idx - 1] = 3
                 eps[idx] = 3
+                idx = idx + 2
                 continue
             else:
+                idx = idx + 1
                 continue
 
         #Compute the degree of eps
