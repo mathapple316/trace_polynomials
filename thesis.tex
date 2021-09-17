@@ -1,0 +1,364 @@
+\documentclass[12pt,reqno,letter,oneside,openright]{book}
+
+%%%%%%%%%%%%
+%\usepackage[euc]{kotex}
+\usepackage{kotex}               % 한글 설정
+%%%%%%%%%%%
+\usepackage{upgreek}
+%\usepackage[notcite, notref]{showkeys}
+%\usepackage[active]{srcltx}
+\usepackage{amsthm,amsxtra}
+\usepackage{amssymb,amsmath,esint}
+\usepackage{amsfonts}
+\usepackage[poly,all]{xy}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{fancyhdr}
+\usepackage{snumaththesis1}
+\usepackage[CJKbookmarks,bookmarks=true,colorlinks=true]{hyperref}
+\usepackage{amssymb, latexsym}  
+\usepackage{mathrsfs}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{algpseudocode}
+\graphicspath{ {images/} }
+\usepackage{enumerate}
+\usepackage{import}
+\usepackage{verbatim}
+\usepackage[doublespacing]{setspace}
+\usepackage{colortbl}
+\usepackage{longtable}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\include{pythonlisting}
+%\usepackage{subfig}
+%\usepackage{longtable}
+%\usepackage[inline]{enumitem}
+\usepackage{tikz-cd}
+%\usepackage{imakeidx}
+%\makeindex[intoc]
+
+\allowdisplaybreaks
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{hyperref}
+\colorlet{linkequation}{blue}
+%\usepackage[colorlinks,plainpages=true,pdfpagelabels,hypertexnames=true,colorlinks=true,pdfstartview=FitV,linkcolor=blue,citecolor=red,urlcolor=black]{hyperref}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%custom command%%%%%%%%%%
+\newcommand{\bigslant}[2]{{\raisebox{.2em}{$#1$}\left/\raisebox{-.2em}{$#2$}\right.}}
+\newcommand{\cw}{\mathcal{C}}
+\newcommand{\cwn}{\mathcal{C}_n}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Mir}{\operatorname{Mir}}
+\renewcommand{\Lsh}{\operatorname{Lsh}}
+\newcommand{\Inv}{\operatorname{Inv}}
+\newcommand{\TR}{\operatorname{\alpha}}
+\newcommand{\TRW}[1]{\operatorname{\alpha}(#1)}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\oo}{\newline\noindent}
+\newcommand{\iiii}{\indent}
+\newcommand{\len}[1]{\mid #1 \mid}
+\newcommand{\slen}[1]{{\mid #1 \mid}_{syl}}
+\newcommand{\clen}[1]{{\mid #1 \mid}_{csyl}}
+\newcommand{\alp}[2]{\gamma_{#1}(#2)}
+\newcommand{\ssl}{\operatorname{SL}(2,\mathbb{C})}
+\everymath{\displaystyle}
+%\usepackage[inline]{showlabels}
+%\usepackage[notcite,notref]{showkeys}
+%\usepackage[left]{lineno}
+%\linenumbers
+\renewcommand{\baselinestretch}{1.1}
+
+\hypersetup{%
+pdftitle={Master's thesis},%
+pdfauthor={Author, Department of Mathematical Sciences, Seoul National University, Republic of Korea},%
+pdfkeywords={pdfkeywords,pdfkeywords,pdfkeywords},%
+citecolor=black,%
+filecolor=black,%
+linkcolor=black,%
+urlcolor=black,%
+}
+
+
+\numberwithin{equation}{chapter}
+%\everymath{\displaystyle}
+
+
+%%%%% THEOREM STYLES %%%%%
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem*}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{conjecture*}{Conjecture of Wang}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}%[section]
+\newtheorem{example}{Example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%% EQUATIONS %%%%%
+
+%\def\eqn#1$$#2$${\begin{equation}\label#1#2\end{equation}}
+%\def\charfn_#1{{\raise1.2pt\hbox{$\chi_{\kern-1pt\lower3pt\hbox{{$\scriptstyle#1$}}}$}}}
+%\newcommand{\rif}[1]{(\ref{#1})}
+%\newcommand{\trif}[1] {\textnormal{\rif{#1}}}
+%\newcommand{\tref}[1] {\textnormal{\ref{#1}}}
+%\makeatletter
+%\newcommand{\pushright}[1]{\ifmeasuring@#1\else\omit\hfill$\displaystyle#1$\fi\ignorespaces}
+%\newcommand{\pushleft}[1]{\ifmeasuring@#1\else\omit$\displaystyle#1$\hfill\fi\ignorespaces}
+%\makeatother
+
+
+
+%%%%% GREEK LETTERS %%%%%
+
+%%%%% OPERATORS %%%%%
+
+%%%%% SHORTCUTS %%%%%
+
+%%%%% INTEGRALS %%%%%
+
+
+\setlength{\headheight}{15pt}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{amsplain}
+\AtBeginDocument{%
+   \def\MR#1{}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% 본문 이전의 쪽들
+
+\doublespacing
+\frontmatter
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% 기초 정보 입력
+
+%% 영어 제목. 어쩔 수 없는 경우가 아니라면 수식 등을 사용하지 않는다.
+\EnglishTitle{Trace polynomials of words in the free group of rank two}
+
+%% 국어 제목. 어쩔 수 없는 경우가 아니라면 수식 등을 사용하지 않는다.
+\KoreanTitle{계수 2 자유군에서의 대각합 다항식}
+
+%% 지은이
+\AuthorKoreanName{박현수}
+
+%% 지은이 영어 이름
+\AuthorEnglishName{Hyeonsu Park}
+
+%% 박사과정 학번
+\StudentNumber{201520262}
+
+%% 국문학위명. 이학 박사 / 이학 석사
+\KoreanNameofDegree{이학석사}
+
+%% 영문학위명. Doctor of Philosophy / Master of Science
+\EnglishNameofDegree{Master of Science}
+
+%% 날짜 1학기 / 2학기
+%% 학위 수여일. 2월 / 8월
+\GraduateDate{2020년 8월} %
+\GraduateDateEnglish{August 2020}
+
+%% 심사용 논문 제출 기한. 4월 / 10월
+\SummittedDate{2020년 4월}
+
+%% 종심 끝난 날짜. 6월 / 12월
+\RefereeDate{2020년 7월}
+
+%% 논문 심사위원
+\RefereeChief{} \RefereeSecond{} \RefereeThird{}
+
+%% 지도교수 성명
+\AdvisorKoreanName{임선희} \AdvisorEnglishName{Seonhee Lim}
+
+%% Keywords. keyword는 논문을 검색할 때 색인어로 가능한 단어를 6개 이내로 선정
+\KeyWordsEnglish{Trace polynomial, Free group of rank two, Special linear group, Cyclically reduced words}
+\KeyWordsKorean{대각합 다항식, 계수2 자유군, 특수 선형군, 순환 기약 워드}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% 각종 양식 만들기
+%%%
+%%% 최종 제출 버젼이 아니라면 각종 양식은 필요없다.
+%%% 이 경우에는 `각종 양식 만들기' 부분을 전부 주석처리하면 된다.
+
+%% 앞표지 만들기
+
+
+
+\makefrontcover
+
+%% 국문 제출 승인서/인준지 만들기
+\makeapproval
+
+%% 영문 제출 승인서
+\makeenglishapproval
+
+\singlespacing
+
+%% 학위논문 원문제공 서비스에 대한 동의서 만들기 (이전 양식인듯)
+%% 논문
+%\makewrittenconsent
+
+%% ``the Copyright"쪽 만들기
+\makecopyright{2020}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% 영문초록.
+%%
+%% 1. 논문의 내용과 결론에 관하여 간략하고 구체적으로 기재
+%%
+%% 2. 스스로 정의한 수식, 명령어 등의 매크로를 사용하지 않는다.
+%%    영문초록은 다음과 같은 최소한의 설정 아래에서도
+%%    아무런 문제없이 컴파일이 되어야 한다.
+%%
+%%    \documentclass{article}
+%%    \usepackage{최소한의 패키지 사용}
+%%    \begin{document}
+%%    영문초록 내용
+%%    \end{document}
+%%
+%%    그래야만 인터넷 등의 자동화 된 시스템에서 다른 이들도
+%%    이 논문의 초록을 제대로 읽을 수 있기 때문이다.
+%%
+%% 3. 영문초록에서 논문의 각 chapter, section의 내용을 요약할 필요는 없다.
+%%    왜냐하면 chapter, section의 내용 요약은 Introduction chapter에서 해야 하는 것이기 때문이다.
+
+\pagenumbering{roman} \setcounter{page}{1}
+
+\begin{EnglishAbstract}
+\hspace{\parindent}
+Procesi's theorem guarantees that traces in a two generator subgroup of $\ssl$ are polynomials in traces of the generators. These polynomials are called trace polynomials and defined for words in the free group of rank two. Let $\cw$ denote the set of cyclically reduced words in $F_2$. 
+Improving Jorgensen's algorithm, we classify all words in $\cw$ with the word lengths less than nine via their trace polynomials. Then we check whether they are in $\sim$-equivalence defined from the operation Mirror, Left shift, and Inverse on $\cw$.
+We prove that two words of the same trace polynomials are $\sim$-equivalent when the word lengths are less than nine.
+We also show, by counterexamples, this result does not hold for the word lengths greater than eight. As a corollary, we verify Wang's conjecture for the word lengths less than nine.
+\end{EnglishAbstract}
+
+%\newpage\null\thispagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}%
+\lhead{\leftmark}%
+\rhead{}%
+\chead{}%
+\cfoot{\thepage}%
+\renewcommand{\headrulewidth}{0pt}
+
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\mainmatter
+
+\pagenumbering{arabic} \setcounter{page}{1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%
+
+    % 표목차 (List of Tables) 생성
+%    \listoftables
+
+    % 그림목차 (List of Figures) 생성
+%    \listoffigures
+
+    % 위의 세 종류의 목차는 한꺼번에 다음 명령으로 생성할 수도 있습니다.
+    %\makecontents
+
+%% 이하의 본문은 LaTeX 표준 클래스 report 양식에 준하여 작성하시면 됩니다.
+%% 하지만 part는 사용하지 못하도록 제거하였으므로, chapter가 문서 내의
+%% 최상위 분류 단위가 됩니다.
+%% You cannot use 'part'
+
+\import{modules/}{Introduction}
+
+\import{modules/}{Preliminaries}
+
+\import{modules/}{Computation}
+
+\import{modules/}{Mainresults}
+
+% 2~8에 대한 테이블
+\import{modules/}{Conclusion}
+
+\import{modules/}{tables}
+
+
+\newpage
+\thispagestyle{empty}%
+    \phantomsection
+\backmatter
+
+\addcontentsline{toc}{chapter}{Bibliography}
+ %%%%퍼옴
+\begin{thebibliography}{3}
+\bibitem{jorgensen} 
+T.Jorgensen:
+\emph{Traces in 2-Generator Subgroups of $\mathrm{SL}(2,\mathbf{C})$} 
+Proceedings of the American Mathematical Society, Vol. 84, No. 3 (Mar., 1982), pp.339-343
+
+\bibitem{wang} 
+Wang Guizhen:
+\emph{A Note on Trace Polynomial}
+Tsinghua science and technology (2007)
+ 
+\bibitem{triana} 
+Charles R. Traina:
+\emph{Trace polynomial for two generator subgroups of SL(2, Q)}
+AMS Volume 79, Number 3 (1980)
+ 
+\bibitem{Goldman} 
+William M. Goldman:
+\emph{Trace coordinates on Fricke spaces of some
+simple hyperbolic surfaces}
+EMS Volume2 Publishing 2009, 611-864
+ 
+\bibitem{Southcott} 
+J.B.Southcott
+\emph{Trace Polynomials of words in special linear groups}
+Austral. Math. Soc. (Series A) 28 (1979), 401-412
+
+\bibitem{Procesi} 
+Procesi, C.,
+\emph{The invariant theory of n × n matrices}
+Adv. Math. 19 (1976), 306–381.
+\end{thebibliography}
+\newpage
+%%%%퍼옴끝
+
+\begin{KoreanAbstract}
+\par 
+\setstretch{1.3}
+$\ssl$의 생성자가 $2$개인 부분군에서는, 행렬대각합을 생성자들의 대각합에 대한 다항식으로 나타낼 수 있고, 그 다항식은 생성자들의 선택에 의존하지 않는다. 이 다항식을 대각합 다항식이라 한다. 본 학위논문에서는 Jorgensen의 정리로 대각합 다항식을 계산하는 알고리듬을 구현하였고, 이 결과로 워드길이 $8$ 이하의 모든 순환기약워드들을 분류하였다. 다음으로, 분류한 순환기약워드들이 Mir, LeftShift, Inverse로 정의되는 $\sim$ 동치관계에 있는지를 조사하였다. 이것으로 다음 두 가지를 증명하였다. 먼저 워드길이 $8$ 이하에 대해, 두 순환기약워드가 $\sim$-동치관계인것은 대각합다항식이 같은것과 동치임을 보였다. 다음으로 워드길이 $9$ 이상부터는, 대각합 다항식은 같지만 $\sim$-동치관계는 아닌 두 순환기약워드가 존재함을 보였다. 이것은 워드길이 $8$이하에 대해, Wang의 
+추측이 성립한다는 것을 보여준다.
+\end{KoreanAbstract}
+
+\end{document}
