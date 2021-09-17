@@ -1,0 +1,617 @@
+\documentclass[aspectratio={169}]{beamer}
+\usefonttheme{professionalfonts}
+\usefonttheme[onlymath]{serif}
+\usecolortheme{orchid}
+\useinnertheme[shadow=true]{rounded}
+\useinnertheme[shadow=true]{rounded}
+\useinnertheme{rectangles}
+\usepackage{amsthm,amsxtra}
+\usepackage{amssymb,amsmath,esint}
+\usepackage{amsfonts}
+\usepackage{bbding}
+\usepackage{amssymb, latexsym}  
+\usepackage{mathrsfs}
+\usepackage{kotex}
+\usepackage{tikz,tikz-cd}
+\usetikzlibrary{arrows}
+\allowdisplaybreaks
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{mathtools}
+\usepackage{hf-tikz}
+\usepackage{listings}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+
+\setbeamercolor*{block title example}{fg=red!50!black,bg= green!80!black!50}
+\setbeamercolor*{block body example}{fg=green!20!black, bg= green!15}
+\setbeamercolor*{block body alerted}{fg= orange!50!black, bg= orange!15}
+\setbeamercolor*{block title alerted}{fg=yellow!50, bg= orange!50!red}
+\usepackage[skins]{tcolorbox}
+
+\mode<presentation>
+{
+  \usetheme{Frankfurt}
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+  \setbeamertemplate{frametitle continuation}{}
+}   
+
+\defbeamertemplate{itemize item}{boldarrow}{\raisebox{0.1ex}{\resizebox{1.5ex}{1.5ex}{\ArrowBoldRightShort}}}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\title{Trace polynomials of words in $F_2$}
+\subtitle
+{Master's thesis presentation}
+\author{Hyeonsu Park}
+%\author{2015-20262 박현수}
+\institute{Department of Mathematical Sciences, SNU}
+\date{May 22, 2020}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+
+\newcommand{\bigslant}[2]{{\raisebox{.2em}{$#1$}\left/\raisebox{-.2em}{$#2$}\right.}}
+\newcommand{\cw}{\mathcal{C}}
+\newcommand{\cwn}{\mathcal{C}_n}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Mir}{\operatorname{Mir}}
+\newcommand{\zxyz}{\mathbb{Z}[x,y,z]}
+\renewcommand{\Lsh}{\operatorname{Lsh}}
+\newcommand{\Inv}{\operatorname{Inv}}
+\newcommand{\TR}{\operatorname{\alpha}}
+\newcommand{\TRW}[1]{\operatorname{\alpha}(#1)}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\oo}{\newline\noindent}
+\newcommand{\iiii}{\indent}
+\newcommand{\len}[1]{\mid #1 \mid}
+\newcommand{\slen}[1]{{\mid #1 \mid}_{syl}}
+\newcommand{\clen}[1]{{\mid #1 \mid}_{csyl}}
+\newcommand{\alp}[2]{\gamma_{#1}(#2)}
+\newcommand{\ssl}{\operatorname{SL}(2,\mathbb{C})}
+\everymath{\displaystyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\AtBeginSection[]
+{
+\begin{frame}{Contents}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\section{Introduction}
+\subsection{Traces in $\ssl$}
+\begin{frame}{Traces in $\ssl$}
+Let $A \in \ssl$ and let $\tau = \tr(A)$. Then $A+A^{-1} = \tau I$.
+\vskip 0.5cm
+\begin{itemize}
+  \item $A^2 = \tau A - I$
+\vskip 0.5cm
+  \item $A^3 = (\tau^2 - 1)A - \tau I $
+\vskip 0.5cm
+  \item $A^4 =  (\tau^3-2\tau)A - (\tau^2 -1)I$\\
+  \hspace{2cm} \vdots
+  \pause
+\setbeamertemplate{itemize item}[boldarrow]
+\item
+$A^{n} =  \beta_n(\tau)A - \beta_{n-1}(\tau)I$
+\vskip 0.2cm
+where $\beta_{n+1}(x)=x \beta_n(x) - \beta_{n-1}(x)$ with $\beta_0(x) = 0$ and $\beta_1(x)=1$.
+\vskip 0.1cm
+(Chebyshev polynomials)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Traces in $\ssl$}
+\setbeamertemplate{itemize item}[boldarrow]
+For $A\in\ssl$, we have
+\begin{equation*}
+\tr(A^n) = \tau\beta_{n}(\tau) - 2\beta_{n-1}(\tau)
+=: \tau_n(\tr A).
+\end{equation*}
+\begin{itemize}
+\item[1] Traces of $A^n$ is are polynomials in $\tr A$.
+\vskip 0.2cm
+\item[2] $\{\tau_n\}$ are only dependent on $n$, not on the choice of $A$.
+\vskip 1cm
+\pause
+\item What about the case of two-generator subgroups?
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Trace polynomial $\TR$}
+\begin{frame}{Trace polynomial $\TR$}
+Procesi's theorem gives us the answer.
+\begin{theorem}[Procesi]
+Let $f : \ssl \times \ssl \longrightarrow \mathbb{C}$ be a regular function. Moreover, let $f$ be invariant under the diagonal action of $\ssl$ by conjugation. Then there exists $F \in \mathbb{Z}[x,y,z]$ such that
+\begin{align*}
+ f(A,B) = F(\tr A,\tr B,\tr AB) 
+\text{ for all } A,B \in \ssl.
+\end{align*}
+\end{theorem}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trace polynomial $\TR$}
+\begin{itemize}
+\item \text{For $A,B\in\ssl$, consider a group homomorphism}
+\begin{align*}
+\rho_{A,B} \text{ : } &F_{2}\rightarrow \ssl\\
+&a \mapsto A, \\
+&b \mapsto B. 
+\end{align*}
+\vskip-10ex
+\setbeamertemplate{itemize item}[boldarrow]
+\item For $w\in F_2$, apply Procesi's theorem to 
+\vskip-2ex
+\begin{equation*}
+f_w(A,B) = \tr\Big(\rho_{A,B}(w) \Big) \text{ for all } A,B \in \ssl.
+\end{equation*}
+\end{itemize}
+\pause
+\begin{block}{Definition of Trace polynomial $\TR(w)$}
+For $w \in F_2$, there exists the unique polynomial $\TR(w) \in \zxyz$ such that
+\begin{equation*}
+\tr \Big( \rho_{A,B}(w) \Big) = \TR(w) \Big( \tr A, \tr B, \tr AB \Big) \text{ for all } A,B \in \ssl.
+\end{equation*}
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trace polynomial $\TR$}
+\begin{itemize}
+\item The trace polynomial of $w$ is unique because of the surjectivity of
+\begin{align*}
+    \ssl \times \ssl &\rightarrow \mathbb{C}^3 
+    \text{ given by }\\
+    (A,B) &\mapsto (\tr A, \tr B, \tr AB).
+\end{align*}
+\item For $v,w \in F_2$, we see that \begin{align*}
+\TR(wv)+\TR(w v^{-1})=\TR(w)\TR(v) \text{ and } \TR(w)=\TR(w^{-1}).
+\end{align*}
+\item For $f\in\opertorname{End}(F_2)$, we have
+\begin{equation*}
+\TR(f(w)) = \TR(w)\Big( \TR\big(f(a) \big), \TR \big( f(b) \big), \TR \big( f(ab) \big) \Big) \text{ for } w\in F_2.
+\end{equation*}
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples}
+\begin{itemize}
+    \item  $w = abab^{-1}$
+\end{itemize}
+\begin{align*}
+\TRW{abab^{-1}} &= \TRW{aba} \TRW{b^{-1}} - \TRW{abab} \\ 
+&= y\TRW{ba^2} - \TR \big( (ab)^2 \big) \\
+&= y(\TRW{ba}\TRW{a} - \TRW{b}) - (\TRW{ab}\TRW{ab} - \TRW{e}) \\
+&= y(xz-y) - (z^2 - 2) = 2 - y^2 - z^2 + xyz.
+\end{align*}
+\end{frame}
+
+\begin{frame}{Examples}
+\begin{itemize}
+    \item  $w = aba^3b^{-1}$
+\end{itemize}
+\vskip 0.5cm
+Consider $f\in \opertorname{End(F_2)}$ given by $f(a)=a$ and $f(b)=bab^{-1}$. 
+\\Then $f(ab^3)$ is equal to $w$.
+\begin{align*}
+\TRW{f(w)} 
+&= 
+\TR(w)\Big( \TR\big(f(a) \big), \TR \big( f(b) \big), \TR \big( f(ab) \big) \Big) \\
+&= \TRW{ab^{3}} \Big( \TRW{a}, \TRW{bab^{-1}}, \TRW{abab^{-1}} \Big) \\
+&= (y^2z - xy - z) \Big(x, x, 2-y^2-z^2+xyz \Big) \\
+&= -2 + x^2+y^2+z^2 - xyz - x^2y^2 - x^2z^2 + x^3yz 
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Computation of trace polynomials}
+\subsection{A naive algorithm}
+\begin{frame}{Notation}
+Let $m\in \mathbb{Z}^{2r}$ for $r>0$. \\
+\begin{itemize}
+    \item 
+For $g,h$ in a multiplicative group $G$, define 
+\begin{equation*}
+    m(g,h): = \prod_{i=1}^{r}{g^{m_{2i-1}} h^{m_{2i}} } \in G.
+\end{equation*}
+$m=(1,3,2,4)$ and $F_2=\langle a,b \rangle$ $\Longrightarrow  m(a,b)=ab^3a^2b^4$.
+\vskip 0.5cm
+\pause
+\item
+Define $\mathbf{B}(m) \in \mathbb{Z}[x,y]$ by
+\begin{equation*}
+ \mathbf{B}(m) := \prod_{i=1}^{r}{\beta_{m_{2i-1}}(x) \beta_{m_{2i}}(y) } 
+\end{equation*}
+$m=(1,3,2,4) \Longrightarrow \mathbf{B}(m)=\beta_1(x)\beta_3(y)\beta_2(x)\beta_4(y)$.
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Notation}
+For $m \in \mathbb{Z}^{2r}$, $\TR(m)$ denotes the trace polynomial of $m(a,b)$, that is
+\begin{equation*}
+    \TR(m) := \TR \Big( m(a,b) \Big).
+\end{equation*}
+\vskip 0.5cm
+Examples \\
+\begin{itemize}
+    \item  $\TR(1,1,1,1) = \TR(abab) = z^2-2 $
+    \item  $\TR(1,1,0,1) = \TR(ab^2) = yz - x $
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A naive algorithm}
+$\TR(m)
+= \sum_{{ {\epsilon \in {\{0,1\}}^{2r}} }}(-1)^{\norm{\epsilon}_1}\cdot\textbf{B}(\mathbf{\mathbf{m} + \epsilon - \mathbf{1}})(x,y)\cdot\textcolor{blue}{\TR(\epsilon)}$ \\
+\vskip 0.2cm
+Suffices to compute $\TR(\epsilon)$ for all $\epsilon \in { \{ {0,1 \} }^{2r}}$.
+\begin{itemize}
+\item $\epsilon = (1,1,1,1,\dots,1,1)$ \\
+\vskip 0.3cm
+$\Longrightarrow \TR(\epsilon) = \TR \big( (ab)^r \big) = \tau_r{(z)}$
+\vskip 0.5cm
+\item $\epsilon$ has at least one zero entry. \\
+\vskip 0.3cm
+$\Longrightarrow$ Reduce $\epsilon$ into $\epsilon'\in { {\{ 0,1 \}}^{2r} }$ so that $\epsilon(a,b)=\epsilon'(a,b)$\\
+\vskip 0.3cm
+For example, $(1,1,1,0,1,1)$ can be reduced into $(1,1,2,1)$.   
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A naive algorithm}
+\begin{block}{Algorithm (Recursive method)}
+ Repeat the following formula until all $\epsilon'$ belongs to ${\mathbb{Z}}^{2}$. \\
+\begin{itemize}
+    \item For $m \in {\mathbb{Z}}^{2r}$ with $r>1$, we have
+\begin{equation*}
+\TR(m)
+= \tau_r(z) + \sum_{{\epsilon \in {(\{0,1\}}^{2r}}\setminus\mathbf{1})} (-1)^{\norm{\epsilon}_1}\textbf{B}(\mathbf{\mathbf{m} + \epsilon - \mathbf{1}})\TR(\epsilon') . 
+\end{equation*}
+where $\epsilon' \in {\{0,1\}}^{2r-2}$ and $\epsilon'(a,b)=\epsilon(a,b)$.
+\vskip 0.5cm
+\item For $m=(p,q) \in \mathbb{Z}^2 $, 
+\begin{equation*}
+ \TR(m) = \beta_{p}(x)\beta_{q}(y)z - x\beta_{p}(x)\beta_{q-1}(y) - y\beta_{p-1}(x)\beta_{q}(y) + 2\beta_{p-1}(x)\beta_{q-1}(y).
+\end{equation*}
+\end{itemize}
+\vskip 0.5cm
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Jorgensen's formular}
+\begin{frame}{Jorgensen's formular}
+\begin{itemize}
+    \item   $\mu \in {\{-1,0,1\}}^{2r}$ is \emph{alternating} if it has even number of non-zero entries appearing alternately with sign. 
+    \vskip 0.5cm
+    \item For an alternating vector $\mu \in {\{-1,0,1}\}^{2r}$,
+\begin{equation*}
+    d(\mu) := \text{the degree of } \TR\big(\mathbf{1}-\operatorname{abs}{\mu}\big)(0,0,z)
+\end{equation*}
+\end{itemize}
+\vskip 0.3cm
+    $\mu = (0,1,0,-1,0,1,-1,0,1,-1,1,-1)$
+\pause
+\begin{itemize}
+\setbeamertemplate{itemize item}[boldarrow]
+    \item $
+\TR\big(\mathbf{1}-\operatorname{abs}{\mu}\big)= \TR{(a^3b)}=x^2z-xy-z$
+\vskip 0.2cm
+    \item $d(\mu) = 1$. 
+\vskip 0.2cm
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Jorgensen's formular}
+Jorgensen presented an \emph{alternating} formula of trace polynomials.
+\begin{theorem}[Jorgensen]
+Let $\mathbf{m} \in \mathbb{Z}^{2r}$ for $r>0$. Then
+\begin{equation*}
+\label{jorgensen}
+\TR(\mathbf{m})(x,y,z) = \frac{1}{2}\mathbf{B}(\mathbf{m})(x,y)\cdot \tau_r(z)+ \frac{1}{2}\sum_{\mu}\{{(-1)^{r-d(\mu)}}\cdot \mathbf{B}(\mathbf{m}+\mu)(x,y) \cdot {\tau_{d(\mu)}(z)}\}
+\end{equation*}
+where $\mu$ runs through all alternating $2r$-vectors.
+\end{theorem}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%원래 책의 exercise내용과 무엇이 다른지?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Jorgensen's formular}
+\begin{lemma}
+Let $\mu$ be an alternating $2r$-vector with $\mu_1 = 0$.
+Collapse all alternating subtuples of length two from $\mu$ until it is not possible. 
+Let $\mu_r$ be the \textbf{\textit{reduced}} tuple after collapsing
+and let $\{a_i\}_{i=0}^n$ be the sequence of the number of consecutive zeros in $\mu_r$. Then we have
+\begin{align*}
+     d(\mu) = \Big| \frac{1}{2}\sum_{i=0}^{n}{(-1)^i a_i} \Big|
+\end{align*}
+\end{lemma}
+\vskip 0.3cm
+$\mu = (0,1,0,-1,0,\textcolor{blue}{1,-1},0,\textcolor{blue}{1,-1,1,-1})$
+\pause
+\begin{itemize}
+\setbeamertemplate{itemize item}[boldarrow]
+    \item $\mu_r = (\textcolor{red}{0},1,\textcolor{red}{0},-1,\textcolor{red}{0,0})$
+    \item $d(\mu) = \frac{1}{2}|1 -1 + 2| = 1$
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Implement in Python3}
+\tiny{
+\lstinputlisting[language=Python]{Code2.py}
+}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Implement in Python3}
+\tiny{
+\lstinputlisting[language=Python]{Code.py}
+}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\begin{figure}[h]
+\begin{subfigure}
+\includegraphics[width=6.8cm,height=8cm]{images/computation.png}
+\end{subfigure}
+\begin{subfigure}
+\includegraphics[width=6.8cm, height=8cm]{images/table.JPG} 
+\end{subfigure}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Trace polynomials of cyclically reduced words in $F_2$}
+\subsection{Word lengths and trace polynomials}
+\begin{frame}{Word lengths and trace polynomials}
+$\cw := $ \emph{the set of cyclically reduced words in $F_2$}.
+\vskip 0.5cm
+What word information can be recovered from trace polynomials?
+\begin{block}{Lemma}
+\label{same_slen}
+For $w \in  \mathcal{C}$, the degree of $\operatorname{\alpha}(w)$ in $z$ equals $\left\lfloor{\dfrac{\slen{w}}{2}}\right\rfloor$.
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Word lengths and trace polynomials}
+\begin{theorem}
+Let $w \in \cw$ with the trace polynomial $\TR(w) \in \mathbb{Z}[x,y,z]$ of degree $k$ in $z$. Also, let $f(x,y)$ be the coefficient of $z^k$ in $\TR(w)$. Then 
+\begin{align*}
+    \len{w} = \operatorname{deg}{f(x,y)} + 2k.
+\end{align*}
+\end{theorem}
+\vskip 0.5cm
+$\TR{(b^3a^2bab)}=xy^3\textcolor{blue}{z^2}-2xy\textcolor{blue}{z^2}-y^4z+3y^2z++x^2z-x^2y^2z-z+xy$
+\begin{itemize}
+\setbeamertemplate{itemize item}[boldarrow]
+\item $deg(xy^3-2xy) + 2\cdot2 = 8$
+\end{itemize}
+\begin{block}{Corollary}
+Let $w_1$ and $w_2$ in $\cw$ have the same trace polynomials. Then $\len{w_1}$=$\len{w_2}$.
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Trace polynomial and $\sim$ equivalence on $\cw$}
+\begin{frame}{Trace polynomial and $\sim$ equivalence on $\cw$}
+    Let $w = u_1 u_2 u_3 \cdots u_n \in \mathcal{C}$ with $u_i \in {\{a,b,a^{-1},b^{-1}\}}$.\\ 
+\vskip 0.5cm
+Three operations on $\mathcal{C}$.
+\begin{itemize}
+    \item $\operatorname{Lsh}(w) = u_2 u_3 \cdots u_{n}u_1$,
+    \item $\operatorname{Mir}(w) = u_n u_{n-1} \cdots u_1$,\text{ and}
+    \item $\operatorname{Inv}(w) = w^{-1} = {u_n}^{-1} {u_{n-1}}^{-1} \cdots {u_1}^{-1}$.
+\end{itemize}
+\vskip 0.5cm
+Define a relation $\sim$ from above.
+\begin{equation*}
+    w \sim w'  \Longleftrightarrow w' = F_nF_{n-1}\dots F_1(w) \text{ for finitely many } F_i \in \{\Lsh, \Mir, \Inv\}.
+\end{equation*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trace polynomial and $\sim$ equivalence on $\cw$}
+\begin{lemma}[Wang]
+Let $w,w' \in \mathcal{C}$.\\ If $w\sim w'$, then we have $\operatorname{\alpha}(w) = \operatorname{\alpha}(w')$.
+\end{lemma}
+\vskip 0.5cm
+    $\cwn := \text{\emph{the set of cyclically reduced words of length $n$}}$. \\
+    \vskip 0.3cm
+\setbeamertemplate{itemize item}[boldarrow]
+    \item On which $\cwn$ does the converse of Lemma hold?  \begin{itemize}
+    \vskip 0.5cm
+    \item Check the injectivity of $\TR : \bigslant{\cwn}{\sim} \rightarrow  \mathbb{Z}[x,y,z]$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Trace polynomial and $\sim$ equivalence on $\cw$}
+\begin{theorem}[main theorem]
+$\TR : \bigslant{\cwn}{\sim} \rightarrow  \mathbb{Z}[x,y,z] $
+is injective if and only if $n \leq 8$
+\end{theorem}
+
+\begin{block}{Corollary}
+\label{main_cor}
+Let $w_1, w_2 \in \cw$ with $\lvert w_1 \rvert, \lvert {w_2} \rvert \leq 8$. The followings are equivalent.
+\vskip 0.3cm
+\begin{enumerate}
+\item $w_1 \sim w_2$
+\vskip 0.3cm
+\item $\TR(w_1) = \TR(w_2)$
+\end{enumerate}
+\end{block}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trace polynomial and $\sim$ equivalence on $\cw$}
+\begin{block}{Proof of the main theorem - 1}
+$\TR : \bigslant{\cwn}{\sim} \rightarrow  \mathbb{Z}[x,y,z] $
+is injective for $n \leq 8.$
+\end{block}
+    \begin{enumerate}
+        \vskip 0.5cm
+        \item Compute all $\TR(w)$ for $w \in \cwn$.
+        \vskip 0.5cm
+        \item Show that $\#(\bigslant{\cwn}{\sim}) = \#\{\TR(w) \lvert w \in \cwn\}$.
+        \vskip 0.3cm
+    \end{enumerate}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example with the case $n=7$}
+\begin{itemize}
+$N_k :=$ the number of equivalence classes in $C_7$ with the size $k$
+\vskip 0.5cm
+\item[1] Using algorithm, we get $\#(\TR(C_7))=106 $. Suppose that $\#(C_7)>106$.
+\pause
+\begin{block}{Observations}
+\begin{itemize}
+    \item Let $w \in \mathcal{C}$ with a prime length $p$, then $\#[w] \in \{ 2, 2p, 4p\}.$
+    \item $N_2 = 2$ for all word lengths.
+\end{itemize}
+\end{block}
+\onslide<2->{
+\item[2] $2+N_{14}+N_{28} = 106$ and $4+14N_{14}+28N_{28} = \#(C_7) = 2188$.
+\vskip 0.5cm
+\item[3] It follows that $N_{28} < 52$. However...
+}
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{52 many such words ...!!}
+\begin{tabular}{llll}
+$a^{-4}ba^{-1}b^{-1}$ &
+$a^{-4}bab^{-1}$&
+$a^{-3}ba^{-1}b^{-2}$&
+$a^{-3}b^{-1}a^{-1}b^{-2}$\\
+$a^{-3}bab^{-2}$&
+$a^{-3}b^{-1}ab^{-2}$ &
+$a^{-3}ba^{-2}b^{-1}$&
+$a^{-3}b^{2}a^{-1}b^{-1}$         \\
+$a^{-3}b^{2}ab^{-1}$&
+$a^{-3}ba^{2}b^{-1}$&
+$a^{-3}b^{2}a^{-1}b$&
+$a^{-3}b^{2}ab$ \\
+$a^{-2}ba^{-1}b^{-3}$&
+$a^{-2}b^{-1}a^{-1}b^{-3}$&
+$a^{-2}bab^{-3}$&
+$a^{-2}b^{-1}ab^{-3}$\\
+$a^{-2}b^{2}a^{-1}b^{-2}$&
+$a^{-2}b^{2}ab^{-2}$&
+$a^{-2}b^{-1}a^{2}b^{2}$&
+$a^{-2}b^{-1}a^{2}b^{-2}$\\
+$a^{-2}ba^{-1}b^{-1}a^{-1}b^{-1}$&
+$a^{-2}bab^{-1}a^{-1}b^{-1}$&
+$a^{-2}b^{-1}ab^{-1}a^{-1}b^{-1}$&
+$a^{-2}ba^{-1}ba^{-1}b^{-1}$\\
+$a^{-2}baba^{-1}b^{-1}$	&
+$a^{-2}b^{-1}aba^{-1}b^{-1}$&
+$a^{-2}b^{3}a^{-1}b^{-1}$&
+$a^{-2}ba^{-1}b^{-1}ab^{-1}$\\
+$a^{-2}bab^{-1}ab^{-1}$	&
+$a^{-2}ba^{-1}bab^{-1}$&
+$a^{-2}babab^{-1}$	&
+$a^{-2}b^{3}ab^{-1}$\\
+$a^{-2}bab^{-1}a^{-1}b$&
+$a^{-2}baba^{-1}b$	&
+$a^{-2}b^{3}a^{-1}b$&
+$a^{-2}b^{3}ab$	\\
+$a^{-1}b^{-1}ab^{4}$&
+$a^{-1}b^{-1}ab^{-4}$&
+$a^{-1}b^{-2}ab^{-3}$&
+$a^{-1}b^{-2}ab^{3}$\\
+$a^{-1}b^{-2}a^{-1}ba^{-1}b^{-1}$&
+$a^{-1}b^{-2}a^{-1}bab^{-1}$&
+$a^{-1}b^{-1}ab^{-2}a^{-1}b$&
+$a^{-1}b^{-1}a^{-1}b^{-2}ab^{-1}$\\
+$a^{-1}b^{-1}ab^{2}a^{-1}b$&
+$a^{-1}b^{-1}ab^{-1}ab^{-2}$&
+$a^{-1}b^{-1}ab^{-1}ab^{2}$	&
+$a^{-1}b^{-1}a^{-1}b^{-2}ab$\\
+$a^{-1}b^{-1}a^{-1}b^{-1}ab^{2}$&
+$a^{-1}b^{-1}a^{-1}bab^{2}$	&
+$a^{-1}b^{-1}a^{-1}b^{2}a^{-1}b$	&
+$a^{-1}b^{-1}aba^{-1}b^{2}$	
+\end{tabular}
+\begin{itemize}
+    \item $\#[w]=28$ 
+    \item Not $\sim$-equivalent to each other.
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trace polynomial and $\sim$ equivalence on $\cw$}
+\begin{block}{Proof of the main theorem - 2}
+$\TR : \bigslant{\cwn}{\sim} \rightarrow  \mathbb{Z}[x,y,z] $
+is not injective for $n \geq 9.$
+\end{block}
+        Consider $f\in\opertorname{End}(F_2)$ such that $f(a)=a$ and $f(b)=bab^{-1}$. 
+    \begin{enumerate}
+        \vskip 0.5cm
+        \item For $k\geq2$, take $u_1 = ab^ka^{-1}b  \text{ and } u_2 = a^{-1}b^kab$.
+        \vskip 0.5cm
+        \item $f(u_1)=aba^kb^{-1}a^{-1}bab^{-1}$ and $f(u_2)= a^{-1}ba^{k}b^{-1}abab^{-1} $
+        have the same trace polynomials. 
+        \vskip 0.5cm
+        \item But $f(u_1) \not\sim f(u_2)$.
+        \vskip 0.5cm
+    \end{enumerate}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trace polynomial and $\sim$ equivalence on $\cw$}
+\begin{block}{Proof of the main theorem - 2}
+$\TR : \bigslant{\cwn}{\sim} \rightarrow  \mathbb{Z}[x,y,z] $
+is not injective for $n \geq 9.$
+\end{block}
+        Consider $f\in\opertorname{End}(F_2)$ such that $f(a)=a$ and $f(b)=bab^{-1}$. 
+    \begin{enumerate}
+        \vskip 0.5cm
+        \item For $k\geq2$, take $u_1 = ab^ka^{-1}b  \text{ and } u_2 = a^{-1}b^kab$.
+        \vskip 0.5cm
+        \item $f(u_1)=aba^kb^{-1}a^{-1}bab^{-1}$ and $f(u_2)= a^{-1}ba^{k}b^{-1}abab^{-1} $
+        have the same trace polynomials. 
+        \vskip 0.5cm
+        \item But $f(u_1) \not\sim f(u_2)$.
+        \vskip 0.5cm
+    \end{enumerate}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\begin{center}
+\huge{Thank you}
+\end{center}
+\end{frame}
+
+\begin{frame}{An optional page}
+
+\begin{Lemma}
+For $w \in \cw$, we have $\#[w] = 2c\delta$ where
+\begin{align*}
+c &= \operatorname{min}\{\,c_v \mid \text{ $v \in \mathcal{L}(w)$}\,\}, \text{ and}  \\
+\delta &= 
+\begin{cases}
+1, \text{ if $w \in \mathcal{L}(Mir(w)) \cup \mathcal{L}(Mir(w^{-1}))$}\\
+2, \text{ else}
+\end{cases}
+\end{align*}
+\end{Lemma}
+ 
+\begin{block}{Lemma}
+Let $w \in \cw$ with an even syllable length. Assume $abs(w)$ has a unique syllable $abs(w)_i$. If
+\begin{equation*}
+\text{If } w_{i+k} \neq w_{i-k} \text{ for some $k\in\mathbb{Z}$, }
+\end{equation*} then we have $\#[w]=4c$.
+\end{block}
+   
+\end{frame}
+\end{document}
